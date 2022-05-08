@@ -8,7 +8,7 @@ import aima.core.search.csp.Constraint;
 import aima.core.search.csp.Variable;
 
 /**
- * 
+ * Representa a restriçao unária que fixa um funcionário num bloco de tempo
  */
 public class AssignedValue<VAR extends Variable, VAL> implements Constraint<VAR, List<Integer>> {
 
