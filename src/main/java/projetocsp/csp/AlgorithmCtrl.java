@@ -1,5 +1,6 @@
 package projetocsp.csp;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -15,16 +16,17 @@ import aima.core.search.csp.FlexibleBacktrackingSolver;
 import aima.core.search.csp.MinConflictsSolver;
 import aima.core.search.csp.Variable;
 import projetocsp.constraints.AssignedValue;
+import projetocsp.entities.Person;
 import projetocsp.entities.TimeSlot;
 
 public class AlgorithmCtrl {
 
 	private List<String> constraintNames;
-	private List<Variable> members;
+	private List<Person> members;
   private Domain<TimeSlot> domain;
 
 	public AlgorithmCtrl(
-    List<Variable> members,
+    List<Person> members,
     List<TimeSlot> timeSlots,
     List<String> constraintNames
   ) {
@@ -35,8 +37,16 @@ public class AlgorithmCtrl {
 	}
 
 	private Domain<TimeSlot> createDomain(List<TimeSlot> timeSlots) {
-    //TODO
-    return null;
+    List<TimeSlot> initDomain = new ArrayList<>();
+    for (TimeSlot timeSlot : timeSlots) {
+      for (Person person : members) {
+        TimeSlot newTimeSlot = new TimeSlot(timeSlot.getHour());
+        newTimeSlot.setPerson(person);
+        initDomain.add(newTimeSlot);
+      }
+    }
+
+    return new Domain<>(initDomain);
   }
 
   public Set<Optional<Assignment<Variable, TimeSlot>>> useAlgorithm(

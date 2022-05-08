@@ -24,7 +24,7 @@ public class Main {
     Person david = new Person("David");
     Person eve = new Person("Eve");
     
-    List<Variable> members = new ArrayList<>(
+    List<Person> members = new ArrayList<>(
       Arrays.asList(alice, bob, charlie, david, eve)
       );
       
