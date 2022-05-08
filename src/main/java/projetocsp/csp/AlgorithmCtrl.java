@@ -15,16 +15,17 @@ import aima.core.search.csp.FlexibleBacktrackingSolver;
 import aima.core.search.csp.MinConflictsSolver;
 import aima.core.search.csp.Variable;
 import projetocsp.constraints.AssignedValue;
+import projetocsp.entities.TimeSlot;
 
 public class AlgorithmCtrl {
 
 	private List<String> constraintNames;
 	private List<Variable> members;
-  private Domain<List<Integer>> domain;
+  private Domain<TimeSlot> domain;
 
 	public AlgorithmCtrl(
     List<Variable> members,
-    List<Integer> timeSlots,
+    List<TimeSlot> timeSlots,
     List<String> constraintNames
   ) {
     this.members = members;
@@ -33,16 +34,16 @@ public class AlgorithmCtrl {
     this.domain = createDomain(timeSlots);
 	}
 
-	private Domain<List<Integer>> createDomain(List<Integer> timeSlots) {
+	private Domain<TimeSlot> createDomain(List<TimeSlot> timeSlots) {
     //TODO
     return null;
   }
 
-  public Set<Optional<Assignment<Variable, List<Integer>>>> useAlgorithm(
+  public Set<Optional<Assignment<Variable, TimeSlot>>> useAlgorithm(
     String algorit,
-		StepCounter<Variable, List<Integer>> stepCounter
+		StepCounter<Variable, TimeSlot> stepCounter
   ) {
-		CspSolver<Variable, List<Integer>> solver;
+		CspSolver<Variable, TimeSlot> solver;
 		switch(algorit) {
 			case "MinConflictsSolver":
 				solver = new MinConflictsSolver<>(500);
@@ -50,12 +51,12 @@ public class AlgorithmCtrl {
 				stepCounter.reset();
 				return getSolutions(solver);
 			case "Backtracking + MRV & DEG + LCV + AC3":
-				solver = new FlexibleBacktrackingSolver<Variable, List<Integer>>().setAll();
+				solver = new FlexibleBacktrackingSolver<Variable, TimeSlot>().setAll();
 				solver.addCspListener(stepCounter);
 				stepCounter.reset();
 				return getSolutions(solver);
 			case "Backtracking + MRV & DEG":
-				solver = new FlexibleBacktrackingSolver<Variable, List<Integer>>().set(CspHeuristics.mrvDeg());
+				solver = new FlexibleBacktrackingSolver<Variable, TimeSlot>().set(CspHeuristics.mrvDeg());
 				solver.addCspListener(stepCounter);
 				stepCounter.reset();
 				return getSolutions(solver);
@@ -69,15 +70,15 @@ public class AlgorithmCtrl {
 		}
 	}
 
-	private Set<Optional<Assignment<Variable, List<Integer>>>> getSolutions(
-    CspSolver<Variable, List<Integer>> solver
+	private Set<Optional<Assignment<Variable, TimeSlot>>> getSolutions(
+    CspSolver<Variable, TimeSlot> solver
   ) {
-		Optional<Assignment<Variable, List<Integer>>> solution;
-		Set<Optional<Assignment<Variable, List<Integer>>>> set = new HashSet<>();
+		Optional<Assignment<Variable, TimeSlot>> solution;
+		Set<Optional<Assignment<Variable, TimeSlot>>> set = new HashSet<>();
 
 		for (Variable var : members) {
-			for (List<Integer> val : domain) {
-				CSP<Variable, List<Integer>> csp = new OfficeSchedulingCSP(
+			for (TimeSlot val : domain) {
+				CSP<Variable, TimeSlot> csp = new OfficeSchedulingCSP(
           members, domain, constraintNames, new AssignedValue<>(var, val)
         );
 				solution = solver.solve(csp);

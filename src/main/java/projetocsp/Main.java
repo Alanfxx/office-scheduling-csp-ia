@@ -11,6 +11,7 @@ import aima.core.search.csp.CspListener;
 import aima.core.search.csp.Variable;
 import projetocsp.csp.AlgorithmCtrl;
 import projetocsp.entities.Person;
+import projetocsp.entities.TimeSlot;
 import projetocsp.utils.Timer;
 
 public class Main {
@@ -27,9 +28,9 @@ public class Main {
       Arrays.asList(alice, bob, charlie, david, eve)
       );
       
-    List<Integer> timeSlots = new ArrayList<>();
+    List<TimeSlot> timeSlots = new ArrayList<>();
     for (int i = 1; i <= 24; i++) {
-      timeSlots.add(i);
+      timeSlots.add(new TimeSlot(i));
     }
     
     List<String> constraintNames = new ArrayList<>();
@@ -43,12 +44,12 @@ public class Main {
     String algorithm = "MinConflictsSolver";
 
 		//Execucao principal ==============================
-    CspListener.StepCounter<Variable, List<Integer>> stepCounter = new CspListener.StepCounter<>();
+    CspListener.StepCounter<Variable, TimeSlot> stepCounter = new CspListener.StepCounter<>();
     AlgorithmCtrl algorithmCtrl = new AlgorithmCtrl(members, timeSlots, constraintNames);
     
     System.out.println("Alocar funcionários ("+algorithm+")");
     Timer timer = new Timer();
-    Set<Optional<Assignment<Variable, List<Integer>>>> solutions = algorithmCtrl.useAlgorithm(algorithm, stepCounter);
+    Set<Optional<Assignment<Variable, TimeSlot>>> solutions = algorithmCtrl.useAlgorithm(algorithm, stepCounter);
     String tempo = timer.toString();
     long numResultados = solutions.size();
 
