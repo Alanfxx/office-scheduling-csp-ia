@@ -8,7 +8,6 @@ import java.util.Set;
 
 import aima.core.search.csp.Assignment;
 import aima.core.search.csp.CspListener;
-import aima.core.search.csp.Variable;
 import projetocsp.csp.AlgorithmCtrl;
 import projetocsp.entities.Person;
 import projetocsp.entities.TimeSlot;
@@ -44,12 +43,12 @@ public class Main {
     String algorithm = "MinConflictsSolver";
 
 		//Execucao principal ==============================
-    CspListener.StepCounter<Variable, TimeSlot> stepCounter = new CspListener.StepCounter<>();
+    CspListener.StepCounter<Person, TimeSlot> stepCounter = new CspListener.StepCounter<>();
     AlgorithmCtrl algorithmCtrl = new AlgorithmCtrl(members, timeSlots, constraintNames);
     
     System.out.println("Alocar funcionários ("+algorithm+")");
     Timer timer = new Timer();
-    Set<Optional<Assignment<Variable, TimeSlot>>> solutions = algorithmCtrl.useAlgorithm(algorithm, stepCounter);
+    Set<Optional<Assignment<Person, TimeSlot>>> solutions = algorithmCtrl.useAlgorithm(algorithm, stepCounter);
     String tempo = timer.toString();
     long numResultados = solutions.size();
 

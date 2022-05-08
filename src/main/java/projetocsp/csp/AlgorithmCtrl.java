@@ -14,7 +14,6 @@ import aima.core.search.csp.CspSolver;
 import aima.core.search.csp.Domain;
 import aima.core.search.csp.FlexibleBacktrackingSolver;
 import aima.core.search.csp.MinConflictsSolver;
-import aima.core.search.csp.Variable;
 import projetocsp.constraints.AssignedValue;
 import projetocsp.entities.Person;
 import projetocsp.entities.TimeSlot;
@@ -49,11 +48,11 @@ public class AlgorithmCtrl {
     return new Domain<>(initDomain);
   }
 
-  public Set<Optional<Assignment<Variable, TimeSlot>>> useAlgorithm(
+  public Set<Optional<Assignment<Person, TimeSlot>>> useAlgorithm(
     String algorit,
-		StepCounter<Variable, TimeSlot> stepCounter
+		StepCounter<Person, TimeSlot> stepCounter
   ) {
-		CspSolver<Variable, TimeSlot> solver;
+		CspSolver<Person, TimeSlot> solver;
 		switch(algorit) {
 			case "MinConflictsSolver":
 				solver = new MinConflictsSolver<>(500);
@@ -61,12 +60,12 @@ public class AlgorithmCtrl {
 				stepCounter.reset();
 				return getSolutions(solver);
 			case "Backtracking + MRV & DEG + LCV + AC3":
-				solver = new FlexibleBacktrackingSolver<Variable, TimeSlot>().setAll();
+				solver = new FlexibleBacktrackingSolver<Person, TimeSlot>().setAll();
 				solver.addCspListener(stepCounter);
 				stepCounter.reset();
 				return getSolutions(solver);
 			case "Backtracking + MRV & DEG":
-				solver = new FlexibleBacktrackingSolver<Variable, TimeSlot>().set(CspHeuristics.mrvDeg());
+				solver = new FlexibleBacktrackingSolver<Person, TimeSlot>().set(CspHeuristics.mrvDeg());
 				solver.addCspListener(stepCounter);
 				stepCounter.reset();
 				return getSolutions(solver);
@@ -80,15 +79,15 @@ public class AlgorithmCtrl {
 		}
 	}
 
-	private Set<Optional<Assignment<Variable, TimeSlot>>> getSolutions(
-    CspSolver<Variable, TimeSlot> solver
+	private Set<Optional<Assignment<Person, TimeSlot>>> getSolutions(
+    CspSolver<Person, TimeSlot> solver
   ) {
-		Optional<Assignment<Variable, TimeSlot>> solution;
-		Set<Optional<Assignment<Variable, TimeSlot>>> set = new HashSet<>();
+		Optional<Assignment<Person, TimeSlot>> solution;
+		Set<Optional<Assignment<Person, TimeSlot>>> set = new HashSet<>();
 
-		for (Variable var : members) {
+		for (Person var : members) {
 			for (TimeSlot val : domain) {
-				CSP<Variable, TimeSlot> csp = new OfficeSchedulingCSP(
+				CSP<Person, TimeSlot> csp = new OfficeSchedulingCSP(
           members, domain, constraintNames, new AssignedValue<>(var, val)
         );
 				solution = solver.solve(csp);
