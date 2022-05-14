@@ -1,5 +1,6 @@
 package projetocsp.constraints;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import aima.core.search.csp.Assignment;
@@ -13,15 +14,28 @@ import projetocsp.entities.TimeSlot;
  */
 public class MaxMembersAtATime<VAR extends Variable, VAL> implements Constraint<VAR, TimeSlot> {
 
+  private VAR var1;
+  private VAR var2;
+	private List<VAR> scope;
+
+	public MaxMembersAtATime(VAR var1, VAR var2) {
+		this.var1 = var1;
+		this.var2 = var2;
+		scope = new ArrayList<>(2);
+		scope.add(var1);
+		scope.add(var2);
+	}
+
   @Override
   public List<VAR> getScope() {
-    // TODO Auto-generated method stub
-    return null;
+    return scope;
   }
 
   @Override
   public boolean isSatisfiedWith(Assignment<VAR, TimeSlot> assignment) {
-    // TODO Auto-generated method stub
-    return false;
+    TimeSlot value1 = assignment.getValue(var1);
+		TimeSlot value2 = assignment.getValue(var2);
+		if(value1 == null || value2 == null) return true;
+		return !value1.getHour().equals(value2.getHour());
   }
 }
