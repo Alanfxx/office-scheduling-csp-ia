@@ -56,32 +56,27 @@ public class AlgorithmCtrl {
 		switch(algorit) {
 			case "MinConflictsSolver":
 				solver = new MinConflictsSolver<>(500);
-				solver.addCspListener(stepCounter);
-				stepCounter.reset();
-				return getSolutions(solver);
+				return getSolutions(solver, stepCounter);
 			case "Backtracking + MRV & DEG + LCV + AC3":
 				solver = new FlexibleBacktrackingSolver<Person, TimeSlot>().setAll();
-				solver.addCspListener(stepCounter);
-				stepCounter.reset();
-				return getSolutions(solver);
+				return getSolutions(solver, stepCounter);
 			case "Backtracking + MRV & DEG":
 				solver = new FlexibleBacktrackingSolver<Person, TimeSlot>().set(CspHeuristics.mrvDeg());
-				solver.addCspListener(stepCounter);
-				stepCounter.reset();
-				return getSolutions(solver);
+				return getSolutions(solver, stepCounter);
 			case "Backtracking":
 				solver = new FlexibleBacktrackingSolver<>();
-				solver.addCspListener(stepCounter);
-				stepCounter.reset();
-				return getSolutions(solver);
+				return getSolutions(solver, stepCounter);
 			default:
 				return new HashSet<>();
 		}
 	}
 
 	private Set<Optional<Assignment<Person, TimeSlot>>> getSolutions(
-    CspSolver<Person, TimeSlot> solver
+    CspSolver<Person, TimeSlot> solver,
+    StepCounter<Person, TimeSlot> stepCounter
   ) {
+    solver.addCspListener(stepCounter);
+		stepCounter.reset();
 		Optional<Assignment<Person, TimeSlot>> solution;
 		Set<Optional<Assignment<Person, TimeSlot>>> set = new HashSet<>();
 

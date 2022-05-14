@@ -36,7 +36,6 @@ public class ManageResults {
     result += "\n";
     result += "________________________________________________\n";
     for (TimeSlot tl : schedule.getTimeSlots()) {
-      // result += "___________________________________________________\n";
       result += tl.getHour() + "\t";
       for (Person p : members) {
         if (tl.getPerson() == null) {
@@ -58,12 +57,12 @@ public class ManageResults {
 		
 		for (Optional<Assignment<Person, TimeSlot>> solution : solutions) {
 			LinkedHashMap<Person, TimeSlot> assignment = solution.get().getVariableToValueMap();
-			List<TimeSlot> timeSlots = cloneTimeSlot();
+			List<TimeSlot> timeSlots = cloneTimeSlots();
 
       //Converter uma atribuição em uma lista de blocos de horarios alocados
       addMembersToTimeSlots(timeSlots, assignment);
 			
-			//Criar um horario e adiociona-lo na lista de schedules
+			//Criar um horario e adiociona-lo na lista de horarios
 			schedules.add(new Schedule(timeSlots));
 		}
 		return schedules;
@@ -79,7 +78,7 @@ public class ManageResults {
     }
   }
 
-  private List<TimeSlot> cloneTimeSlot() {
+  private List<TimeSlot> cloneTimeSlots() {
 		List<TimeSlot> timeSlotClones = new ArrayList<>();
 		for(TimeSlot timeSlot : timeSlots) {
 			try {
