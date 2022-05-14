@@ -2,7 +2,7 @@ package projetocsp.entities;
 
 import java.util.List;
 
-public class PersonSchedule {
+public class PersonSchedule implements Cloneable {
   private List<Integer> schedule;
 
   public PersonSchedule(List<Integer> schedule) {
@@ -36,5 +36,17 @@ public class PersonSchedule {
     } else if (!schedule.equals(other.schedule))
       return false;
     return true;
+  }
+
+  @Override
+  public PersonSchedule clone() throws CloneNotSupportedException {
+		PersonSchedule result;
+		try {
+			result = (PersonSchedule) super.clone();
+			result.schedule = List.copyOf(schedule);
+		} catch (CloneNotSupportedException e) {
+			throw new UnsupportedOperationException("TimeSlot nao pode ser clonado");
+		}
+		return result;
   }
 }

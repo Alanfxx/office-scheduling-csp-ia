@@ -14,7 +14,6 @@ import aima.core.search.csp.CspSolver;
 import aima.core.search.csp.Domain;
 import aima.core.search.csp.FlexibleBacktrackingSolver;
 import aima.core.search.csp.MinConflictsSolver;
-import projetocsp.constraints.AssignedValue;
 import projetocsp.entities.Person;
 import projetocsp.entities.PersonSchedule;
 import projetocsp.entities.TimeSlot;
@@ -37,16 +36,44 @@ public class AlgorithmCtrl {
 	}
 
 	private Domain<PersonSchedule> createDomain(List<TimeSlot> timeSlots) {
+    System.out.println("Criando um dominio..");
     List<PersonSchedule> initDomain = new ArrayList<>();
-    for (TimeSlot timeSlot : timeSlots) {
-      for (Person person : members) {
-        // TimeSlot newTimeSlot = timeSlot.clone();
-        // newTimeSlot.setPerson(person);
-        // initDomain.add(newTimeSlot);
-      }
-    }
+    List<Integer> hours = timeSlotsToInt(timeSlots);
+
+    createCombinations(initDomain, new ArrayList<>(), hours);
+    System.out.println("Tamanho do dominio: "+initDomain.size());
 
     return new Domain<PersonSchedule>(initDomain);
+  }
+
+  private void createCombinations(
+    List<PersonSchedule> initDomain,
+    List<Integer> result,
+    List<Integer> hours
+  ) {
+    if (hours.isEmpty()) {
+      if (!result.isEmpty()) {
+        initDomain.add(new PersonSchedule(result));
+      } 
+    } else {
+      List<Integer> newResult = new ArrayList<>(result);
+      newResult.add(hours.get(0));
+      List<Integer> newHours = new ArrayList<>(hours);
+      newHours.remove(hours.get(0));
+
+      createCombinations(initDomain, newResult, newHours);
+
+      List<Integer> newResult2 = new ArrayList<>(result);
+      createCombinations(initDomain, newResult2, newHours);
+    }
+  }
+
+  private List<Integer> timeSlotsToInt(List<TimeSlot> timeSlots) {
+    List<Integer> list = new ArrayList<>();
+    for (TimeSlot tl : timeSlots) {
+      list.add(tl.getHour());
+    }
+    return list;
   }
 
   public Set<Optional<Assignment<Person, PersonSchedule>>> useAlgorithm(
@@ -56,7 +83,7 @@ public class AlgorithmCtrl {
 		CspSolver<Person, PersonSchedule> solver;
 		switch(algorit) {
 			case "MinConflictsSolver":
-				solver = new MinConflictsSolver<>(500);
+				solver = new MinConflictsSolver<>(100);
 				return getSolutions(solver, stepCounter);
 			case "Backtracking + MRV & DEG + LCV + AC3":
 				solver = new FlexibleBacktrackingSolver<Person, PersonSchedule>().setAll();
@@ -81,16 +108,17 @@ public class AlgorithmCtrl {
 		Optional<Assignment<Person, PersonSchedule>> solution;
 		Set<Optional<Assignment<Person, PersonSchedule>>> set = new HashSet<>();
 
-		for (Person var : members) {
-			for (PersonSchedule val : domain) {
+		// for (Person var : members) {
+		// 	for (PersonSchedule val : domain) {
 				CSP<Person, PersonSchedule> csp = new OfficeSchedulingCSP(
-          members, domain, constraintNames, new AssignedValue<>(var, val)
+          members, domain, constraintNames
+          // new AssignedValue<>(var, val)
         );
 				solution = solver.solve(csp);
 				if(!solution.isEmpty())
 					set.add(solution);
-			}
-		}
+		// 	}
+		// }
 		return set;
 	}
 }

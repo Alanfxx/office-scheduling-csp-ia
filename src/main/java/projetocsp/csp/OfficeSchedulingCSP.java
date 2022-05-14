@@ -14,8 +14,8 @@ public class OfficeSchedulingCSP extends CSP<Person, PersonSchedule> {
 	public OfficeSchedulingCSP(
     List<Person> members,
     Domain<PersonSchedule> domain,
-    List<String> contraintNames,
-    Constraint<Person, PersonSchedule> dynamicConstraint
+    List<String> contraintNames
+    // Constraint<Person, PersonSchedule> dynamicConstraint
   ) {
     super(members);
 
@@ -29,7 +29,7 @@ public class OfficeSchedulingCSP extends CSP<Person, PersonSchedule> {
 		 * Restricao para atribuir valores a cada variavel
 		 * dinamicamente e gerar os melhores resultados
 		 */
-		addConstraint(dynamicConstraint); 
+		// addConstraint(dynamicConstraint);
 	}
 
   private void addConstraints(List<String> contraintNames) {

@@ -39,8 +39,8 @@ public class MaxMembersAtATime<VAR extends Variable, VAL> implements Constraint<
 		if(value1 == null || value2 == null) return true;
 
     boolean check = true;
-    for (Integer a : value1.getSchedule()) {
-      if (value2.getSchedule().contains(a)) check = false;
+    for (Integer hour : value1.getSchedule()) {
+      if (value2.getSchedule().contains(hour)) check = false;
     }
 
 		return check;

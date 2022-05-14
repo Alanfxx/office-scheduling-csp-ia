@@ -70,7 +70,9 @@ public class Main {
     ManageResults mr = new ManageResults(solutions, timeSlots, members);
     List<Schedule> schedules = mr.getSchedules();
 
-    System.out.println(mr.getResult(schedules.get(0)));
-    System.out.println(mr.getResult(schedules.get(1)));
+    if (numResultados > 0) {
+      System.out.println(mr.getResult(schedules.get(0)));
+      // System.out.println(mr.getResult(schedules.get(1)));
+    }
 	}
 }
