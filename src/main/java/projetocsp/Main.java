@@ -10,6 +10,7 @@ import aima.core.search.csp.Assignment;
 import aima.core.search.csp.CspListener;
 import projetocsp.csp.AlgorithmCtrl;
 import projetocsp.entities.Person;
+import projetocsp.entities.PersonSchedule;
 import projetocsp.entities.Schedule;
 import projetocsp.entities.TimeSlot;
 import projetocsp.utils.ManageResults;
@@ -19,12 +20,13 @@ public class Main {
 	
 	public static void main(String[] args) {
 
-    // Criando um caso ===============================
-    Person alice = new Person("Alice");
-    Person bob = new Person("Bob");
-    Person charlie = new Person("Charlie");
-    Person david = new Person("David");
-    Person eve = new Person("Eve");
+    // =====[ Criando um caso ]=======================
+
+    Person alice = new Person("Alice", 2);
+    Person bob = new Person("Bob", 2);
+    Person charlie = new Person("Charlie", 2);
+    Person david = new Person("David", 2);
+    Person eve = new Person("Eve", 2);
     
     List<Person> members = new ArrayList<>(
       Arrays.asList(alice, bob, charlie, david, eve)
@@ -38,24 +40,29 @@ public class Main {
     List<String> constraintNames = new ArrayList<>();
     constraintNames.add("MaxMembersAtATime");
 
-    // Escolhendo o algoritmo =========================
-    // "MinConflictsSolver"
-    // "Backtracking + MRV & DEG + LCV + AC3"
-    // "Backtracking + MRV & DEG"
-    // "Backtracking"
-    String algorithm = "MinConflictsSolver";
 
-		//Execucao principal ==============================
-    CspListener.StepCounter<Person, TimeSlot> stepCounter = new CspListener.StepCounter<>();
+    // =====[ Escolhendo o algoritmo ]================
+
+    String algorithm = "MinConflictsSolver";
+    // String algorithm = "Backtracking + MRV & DEG + LCV + AC3";
+    // String algorithm = "Backtracking + MRV & DEG";
+    // String algorithm = "Backtracking";
+
+
+		// =====[ Execucao principal ]====================
+
+    CspListener.StepCounter<Person, PersonSchedule> stepCounter = new CspListener.StepCounter<>();
     AlgorithmCtrl algorithmCtrl = new AlgorithmCtrl(members, timeSlots, constraintNames);
     
     System.out.println("Alocar funcionários ("+algorithm+")");
     Timer timer = new Timer();
-    Set<Optional<Assignment<Person, TimeSlot>>> solutions = algorithmCtrl.useAlgorithm(algorithm, stepCounter);
+    Set<Optional<Assignment<Person, PersonSchedule>>> solutions = algorithmCtrl.useAlgorithm(algorithm, stepCounter);
     String tempo = timer.toString();
     long numResultados = solutions.size();
 
-    // Exibindo os resultados =========================
+
+    // =====[ Exibindo os resultados ]================
+
     System.out.println("Tempo decorrido = "+ tempo);
     System.out.println("Solucoes obtidas = "+ numResultados);
     System.out.println(stepCounter.getResults() + "\n");
@@ -64,6 +71,6 @@ public class Main {
     List<Schedule> schedules = mr.getSchedules();
 
     System.out.println(mr.getResult(schedules.get(0)));
-
+    System.out.println(mr.getResult(schedules.get(1)));
 	}
 }

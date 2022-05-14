@@ -6,13 +6,13 @@ import java.util.List;
 import aima.core.search.csp.Assignment;
 import aima.core.search.csp.Constraint;
 import aima.core.search.csp.Variable;
-import projetocsp.entities.TimeSlot;
+import projetocsp.entities.PersonSchedule;
 
 /**
  * Representa uma restrição binária que proíbe duas pessoas de estar
  * no escritório no mesmo bloco de tempo.
  */
-public class MaxMembersAtATime<VAR extends Variable, VAL> implements Constraint<VAR, TimeSlot> {
+public class MaxMembersAtATime<VAR extends Variable, VAL> implements Constraint<VAR, PersonSchedule> {
 
   private VAR var1;
   private VAR var2;
@@ -32,10 +32,17 @@ public class MaxMembersAtATime<VAR extends Variable, VAL> implements Constraint<
   }
 
   @Override
-  public boolean isSatisfiedWith(Assignment<VAR, TimeSlot> assignment) {
-    TimeSlot value1 = assignment.getValue(var1);
-		TimeSlot value2 = assignment.getValue(var2);
+  public boolean isSatisfiedWith(Assignment<VAR, PersonSchedule> assignment) {
+    PersonSchedule value1 = assignment.getValue(var1);
+		PersonSchedule value2 = assignment.getValue(var2);
+
 		if(value1 == null || value2 == null) return true;
-		return !value1.getHour().equals(value2.getHour());
+
+    boolean check = true;
+    for (Integer a : value1.getSchedule()) {
+      if (value2.getSchedule().contains(a)) check = false;
+    }
+
+		return check;
   }
 }

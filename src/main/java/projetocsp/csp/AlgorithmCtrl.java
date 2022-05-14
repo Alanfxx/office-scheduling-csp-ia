@@ -16,13 +16,14 @@ import aima.core.search.csp.FlexibleBacktrackingSolver;
 import aima.core.search.csp.MinConflictsSolver;
 import projetocsp.constraints.AssignedValue;
 import projetocsp.entities.Person;
+import projetocsp.entities.PersonSchedule;
 import projetocsp.entities.TimeSlot;
 
 public class AlgorithmCtrl {
 
 	private List<String> constraintNames;
 	private List<Person> members;
-  private Domain<TimeSlot> domain;
+  private Domain<PersonSchedule> domain;
 
 	public AlgorithmCtrl(
     List<Person> members,
@@ -35,33 +36,33 @@ public class AlgorithmCtrl {
     this.domain = createDomain(timeSlots);
 	}
 
-	private Domain<TimeSlot> createDomain(List<TimeSlot> timeSlots) {
-    List<TimeSlot> initDomain = new ArrayList<>();
+	private Domain<PersonSchedule> createDomain(List<TimeSlot> timeSlots) {
+    List<PersonSchedule> initDomain = new ArrayList<>();
     for (TimeSlot timeSlot : timeSlots) {
       for (Person person : members) {
-        TimeSlot newTimeSlot = new TimeSlot(timeSlot.getHour());
-        newTimeSlot.setPerson(person);
-        initDomain.add(newTimeSlot);
+        // TimeSlot newTimeSlot = timeSlot.clone();
+        // newTimeSlot.setPerson(person);
+        // initDomain.add(newTimeSlot);
       }
     }
 
-    return new Domain<>(initDomain);
+    return new Domain<PersonSchedule>(initDomain);
   }
 
-  public Set<Optional<Assignment<Person, TimeSlot>>> useAlgorithm(
+  public Set<Optional<Assignment<Person, PersonSchedule>>> useAlgorithm(
     String algorit,
-		StepCounter<Person, TimeSlot> stepCounter
+		StepCounter<Person, PersonSchedule> stepCounter
   ) {
-		CspSolver<Person, TimeSlot> solver;
+		CspSolver<Person, PersonSchedule> solver;
 		switch(algorit) {
 			case "MinConflictsSolver":
 				solver = new MinConflictsSolver<>(500);
 				return getSolutions(solver, stepCounter);
 			case "Backtracking + MRV & DEG + LCV + AC3":
-				solver = new FlexibleBacktrackingSolver<Person, TimeSlot>().setAll();
+				solver = new FlexibleBacktrackingSolver<Person, PersonSchedule>().setAll();
 				return getSolutions(solver, stepCounter);
 			case "Backtracking + MRV & DEG":
-				solver = new FlexibleBacktrackingSolver<Person, TimeSlot>().set(CspHeuristics.mrvDeg());
+				solver = new FlexibleBacktrackingSolver<Person, PersonSchedule>().set(CspHeuristics.mrvDeg());
 				return getSolutions(solver, stepCounter);
 			case "Backtracking":
 				solver = new FlexibleBacktrackingSolver<>();
@@ -71,18 +72,18 @@ public class AlgorithmCtrl {
 		}
 	}
 
-	private Set<Optional<Assignment<Person, TimeSlot>>> getSolutions(
-    CspSolver<Person, TimeSlot> solver,
-    StepCounter<Person, TimeSlot> stepCounter
+	private Set<Optional<Assignment<Person, PersonSchedule>>> getSolutions(
+    CspSolver<Person, PersonSchedule> solver,
+    StepCounter<Person, PersonSchedule> stepCounter
   ) {
     solver.addCspListener(stepCounter);
 		stepCounter.reset();
-		Optional<Assignment<Person, TimeSlot>> solution;
-		Set<Optional<Assignment<Person, TimeSlot>>> set = new HashSet<>();
+		Optional<Assignment<Person, PersonSchedule>> solution;
+		Set<Optional<Assignment<Person, PersonSchedule>>> set = new HashSet<>();
 
 		for (Person var : members) {
-			for (TimeSlot val : domain) {
-				CSP<Person, TimeSlot> csp = new OfficeSchedulingCSP(
+			for (PersonSchedule val : domain) {
+				CSP<Person, PersonSchedule> csp = new OfficeSchedulingCSP(
           members, domain, constraintNames, new AssignedValue<>(var, val)
         );
 				solution = solver.solve(csp);

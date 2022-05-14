@@ -9,17 +9,18 @@ import java.util.Set;
 
 import aima.core.search.csp.Assignment;
 import projetocsp.entities.Person;
+import projetocsp.entities.PersonSchedule;
 import projetocsp.entities.Schedule;
 import projetocsp.entities.TimeSlot;
 
 public class ManageResults {
 
-	private Set<Optional<Assignment<Person, TimeSlot>>> solutions;
+	private Set<Optional<Assignment<Person, PersonSchedule>>> solutions;
   private List<TimeSlot> timeSlots;
   private List<Person> members;
 	
 	public ManageResults(
-		Set<Optional<Assignment<Person, TimeSlot>>> solutions,
+		Set<Optional<Assignment<Person, PersonSchedule>>> solutions,
     List<TimeSlot> timeSlots,
     List<Person> members
   ) {
@@ -55,8 +56,8 @@ public class ManageResults {
 		List<Schedule> schedules = new ArrayList<>();
 		if(solutions.isEmpty()) return schedules;
 		
-		for (Optional<Assignment<Person, TimeSlot>> solution : solutions) {
-			LinkedHashMap<Person, TimeSlot> assignment = solution.get().getVariableToValueMap();
+		for (Optional<Assignment<Person, PersonSchedule>> solution : solutions) {
+			LinkedHashMap<Person, PersonSchedule> assignment = solution.get().getVariableToValueMap();
 			List<TimeSlot> timeSlots = cloneTimeSlots();
 
       //Converter uma atribuição em uma lista de blocos de horarios alocados
@@ -68,10 +69,13 @@ public class ManageResults {
 		return schedules;
 	}
 
-  private void addMembersToTimeSlots(List<TimeSlot> timeSlots2, LinkedHashMap<Person, TimeSlot> assignment) {
-    for (Map.Entry<Person, TimeSlot> entry : assignment.entrySet()) {
+  private void addMembersToTimeSlots(
+    List<TimeSlot> timeSlots2,
+    LinkedHashMap<Person, PersonSchedule> assignment
+  ) {
+    for (Map.Entry<Person, PersonSchedule> entry : assignment.entrySet()) {
       for (TimeSlot ts : timeSlots2) {
-        if (ts.getHour() == entry.getValue().getHour()) {
+        if (entry.getValue().getSchedule().contains(ts.getHour())) {
           ts.setPerson(entry.getKey());
         }
       }

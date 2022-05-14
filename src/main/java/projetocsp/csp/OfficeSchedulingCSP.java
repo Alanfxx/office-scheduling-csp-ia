@@ -7,15 +7,15 @@ import aima.core.search.csp.Constraint;
 import aima.core.search.csp.Domain;
 import projetocsp.constraints.MaxMembersAtATime;
 import projetocsp.entities.Person;
-import projetocsp.entities.TimeSlot;
+import projetocsp.entities.PersonSchedule;
 
-public class OfficeSchedulingCSP extends CSP<Person, TimeSlot> {
+public class OfficeSchedulingCSP extends CSP<Person, PersonSchedule> {
 
 	public OfficeSchedulingCSP(
     List<Person> members,
-    Domain<TimeSlot> domain,
+    Domain<PersonSchedule> domain,
     List<String> contraintNames,
-    Constraint<Person, TimeSlot> dynamicConstraint
+    Constraint<Person, PersonSchedule> dynamicConstraint
   ) {
     super(members);
 
