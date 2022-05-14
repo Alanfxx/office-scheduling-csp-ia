@@ -10,13 +10,16 @@ import aima.core.search.csp.Assignment;
 import aima.core.search.csp.CspListener;
 import projetocsp.csp.AlgorithmCtrl;
 import projetocsp.entities.Person;
+import projetocsp.entities.Schedule;
 import projetocsp.entities.TimeSlot;
+import projetocsp.utils.ManageResults;
 import projetocsp.utils.Timer;
 
 public class Main {
 	
 	public static void main(String[] args) {
 
+    // Criando um caso ===============================
     Person alice = new Person("Alice");
     Person bob = new Person("Bob");
     Person charlie = new Person("Charlie");
@@ -56,6 +59,11 @@ public class Main {
     System.out.println("Tempo decorrido = "+ tempo);
     System.out.println("Solucoes obtidas = "+ numResultados);
     System.out.println(stepCounter.getResults() + "\n");
+
+    ManageResults mr = new ManageResults(solutions, timeSlots, members);
+    List<Schedule> schedules = mr.getSchedules();
+
+    System.out.println(mr.getResult(schedules.get(0)));
 
 	}
 }
