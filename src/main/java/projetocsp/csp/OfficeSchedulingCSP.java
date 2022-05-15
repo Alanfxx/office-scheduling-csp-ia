@@ -6,6 +6,7 @@ import aima.core.search.csp.CSP;
 import aima.core.search.csp.Constraint;
 import aima.core.search.csp.Domain;
 import projetocsp.constraints.MaxWorkingHours;
+import projetocsp.constraints.PreferredSchedule;
 import projetocsp.entities.Person;
 import projetocsp.entities.TimeSlot;
 
@@ -38,8 +39,11 @@ public class OfficeSchedulingCSP extends CSP<TimeSlot, Person> {
         addConstraint(new MaxWorkingHours<>(tl));
       }
     }
-    // if(contraintNames.contains("xxxxxx")) {
-    // }
+    if (contraintNames.contains("PreferredSchedule")) {
+      for (TimeSlot tl : getVariables()) {
+        addConstraint(new PreferredSchedule<>(tl));
+      }
+    }
   }
 
   // private void addMaxMembersAtATime(int j) {

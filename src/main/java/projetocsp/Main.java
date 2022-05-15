@@ -39,8 +39,11 @@ public class Main {
       timeSlots.add(new TimeSlot(i));
     }
 
+    bob.setPreferences(new ArrayList<>(Arrays.asList(timeSlots.get(0), timeSlots.get(1))));
+
     List<String> constraintNames = new ArrayList<>();
     constraintNames.add("MaxWorkingHours");
+    constraintNames.add("PreferredSchedule");
 
 
     // =====[ Escolhendo o algoritmo ]================

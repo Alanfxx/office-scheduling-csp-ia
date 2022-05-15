@@ -3,6 +3,8 @@ package projetocsp.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import aima.core.search.csp.Variable;
+
 public class Person implements Cloneable {
 
   private String name;
@@ -15,8 +17,9 @@ public class Person implements Cloneable {
     this.setPreferences(new ArrayList<TimeSlot>());
   }
 
-  public List<TimeSlot> getPreferences() {
-    return preferences;
+  public boolean free(Variable var) {
+    if (preferences.isEmpty()) return true;
+    return preferences.contains(var);
   }
 
   public void setPreferences(List<TimeSlot> preferences) {
