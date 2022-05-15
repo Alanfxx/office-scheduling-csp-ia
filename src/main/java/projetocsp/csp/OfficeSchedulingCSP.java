@@ -52,12 +52,4 @@ public class OfficeSchedulingCSP extends CSP<TimeSlot, Person> {
       }
     }
   }
-
-  // private void addMaxMembersAtATime(int j) {
-  //   List<TimeSlot> vars = getVariables();
-	// 	for (int i = j+1; i < vars.size(); i++) {
-	// 		addConstraint(new MaxMembersAtATime<>(vars.get(j), vars.get(i)));
-	// 	}
-	// 	if (j+1 < vars.size()) addMaxMembersAtATime(j+1);
-	// }
 }

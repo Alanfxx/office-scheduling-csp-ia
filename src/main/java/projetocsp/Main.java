@@ -22,10 +22,10 @@ public class Main {
     // =====[ Criando um caso ]=======================
 
     Person alice = new Person("Alice", 2);
-    Person bob = new Person("Bob", 5);
+    Person bob = new Person("Bob", 3);
     Person charlie = new Person("Charlie", 2);
     Person david = new Person("David", 2);
-    Person eve = new Person("Eve", 2);
+    Person eve = new Person("Eve", 4);
 
     //Valor necessario para atribuir em horarios sem funcionarios
     Person empty = new Person("Empty", 24);
@@ -101,7 +101,6 @@ public class Main {
 
     if (numResultados > 0) {
       System.out.println(mr.getResult(schedules.get(0)));
-      // System.out.println(mr.getResult(schedules.get(1)));
     }
 	}
 }

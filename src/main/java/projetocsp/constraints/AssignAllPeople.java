@@ -14,12 +14,10 @@ import projetocsp.entities.TimeSlot;
  */
 public class AssignAllPeople implements Constraint<TimeSlot, Person> {
 
-  // private VAR var;
   private List<Person> values;
 	private List<TimeSlot> scope;
 
 	public AssignAllPeople(TimeSlot var, List<Person> values) {
-		// this.var = var;
 		this.values = values;
 		scope = new ArrayList<>(1);
 		scope.add(var);
