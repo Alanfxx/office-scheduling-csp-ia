@@ -5,32 +5,33 @@ import java.util.List;
 
 import aima.core.search.csp.Assignment;
 import aima.core.search.csp.Constraint;
-import aima.core.search.csp.Variable;
 import projetocsp.entities.Person;
+import projetocsp.entities.TimeSlot;
 
 /**
  * Representa uma restrição unária que proíbe um funcionário de estar
  * no escritório num bloco de tempo que nao esteja em sua lista de preferidos.
  */
-public class PreferredSchedule<VAR extends Variable, VAL> implements Constraint<VAR, Person> {
+public class PreferredSchedule implements Constraint<TimeSlot, Person> {
 
-  private VAR var;
-	private List<VAR> scope;
+  private TimeSlot var;
+	private List<TimeSlot> scope;
 
-  public PreferredSchedule(VAR var) {
+  public PreferredSchedule(TimeSlot var) {
     this.var = var;
     scope = new ArrayList<>(1);
 		scope.add(var);
   }
 
   @Override
-  public List<VAR> getScope() {
+  public List<TimeSlot> getScope() {
     return scope;
   }
 
   @Override
-  public boolean isSatisfiedWith(Assignment<VAR, Person> assignment) {
+  public boolean isSatisfiedWith(Assignment<TimeSlot, Person> assignment) {
     Person value = assignment.getValue(var);
-    return value.free(var);
+    boolean check = value.free(var);
+    return check;
   }
 }

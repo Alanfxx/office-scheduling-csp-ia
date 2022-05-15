@@ -5,19 +5,19 @@ import java.util.List;
 
 import aima.core.search.csp.Assignment;
 import aima.core.search.csp.Constraint;
-import aima.core.search.csp.Variable;
 import projetocsp.entities.Person;
+import projetocsp.entities.TimeSlot;
 
 /**
  * Representa a restriçao unária que fixa um funcionário num bloco de tempo
  */
-public class AssignedValue<VAR extends Variable, VAL> implements Constraint<VAR, Person> {
+public class AssignedValue implements Constraint<TimeSlot, Person> {
 
-	private VAR var;
+	private TimeSlot var;
 	private Person val;
-	private List<VAR> scope;
+	private List<TimeSlot> scope;
 
-	public AssignedValue(VAR var, Person val) {
+	public AssignedValue(TimeSlot var, Person val) {
 		this.var = var;
 		this.val = val;
 		scope = new ArrayList<>(1);
@@ -25,12 +25,12 @@ public class AssignedValue<VAR extends Variable, VAL> implements Constraint<VAR,
 	}
 
 	@Override
-	public List<VAR> getScope() {
+	public List<TimeSlot> getScope() {
 		return scope;
 	}
 
 	@Override
-	public boolean isSatisfiedWith(Assignment<VAR, Person> assignment) {
+	public boolean isSatisfiedWith(Assignment<TimeSlot, Person> assignment) {
 		Person value = assignment.getValue(var);
 		return value.equals(val);
 	}

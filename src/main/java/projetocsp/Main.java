@@ -22,7 +22,7 @@ public class Main {
     // =====[ Criando um caso ]=======================
 
     Person alice = new Person("Alice", 2);
-    Person bob = new Person("Bob", 4);
+    Person bob = new Person("Bob", 5);
     Person charlie = new Person("Charlie", 2);
     Person david = new Person("David", 2);
     Person eve = new Person("Eve", 2);
@@ -39,11 +39,28 @@ public class Main {
       timeSlots.add(new TimeSlot(i));
     }
 
-    bob.setPreferences(new ArrayList<>(Arrays.asList(timeSlots.get(0), timeSlots.get(1))));
+    bob.setPreferences(new ArrayList<>(
+      Arrays.asList(
+        timeSlots.get(0),
+        timeSlots.get(1),
+        timeSlots.get(2),
+        timeSlots.get(3),
+        timeSlots.get(4),
+        timeSlots.get(5),
+        timeSlots.get(6),
+        timeSlots.get(7),
+        timeSlots.get(8),
+        timeSlots.get(9),
+        timeSlots.get(10),
+        timeSlots.get(11),
+        timeSlots.get(12)
+      )
+    ));
 
     List<String> constraintNames = new ArrayList<>();
     constraintNames.add("MaxWorkingHours");
     constraintNames.add("PreferredSchedule");
+    constraintNames.add("AssignAllPeople");
 
 
     // =====[ Escolhendo o algoritmo ]================

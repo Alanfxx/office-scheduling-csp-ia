@@ -39,7 +39,7 @@ public class AlgorithmCtrl {
 		CspSolver<TimeSlot, Person> solver;
 		switch(algorit) {
 			case "MinConflictsSolver":
-				solver = new MinConflictsSolver<>(500);
+				solver = new MinConflictsSolver<>(1000);
 				return getSolutions(solver, stepCounter);
 			case "Backtracking + MRV & DEG + LCV + AC3":
 				solver = new FlexibleBacktrackingSolver<TimeSlot, Person>().setAll();
@@ -64,17 +64,17 @@ public class AlgorithmCtrl {
 		Optional<Assignment<TimeSlot, Person>> solution;
 		Set<Optional<Assignment<TimeSlot, Person>>> set = new HashSet<>();
 
-		// for (TimeSlot var : timeSlots) {
-			// for (Person val : members) {
+		for (TimeSlot var : timeSlots) {
+			for (Person val : members) {
 				CSP<TimeSlot, Person> csp = new OfficeSchedulingCSP(
-          members, timeSlots, constraintNames
-          // new AssignedValue<>(var, val)
+          members, timeSlots, constraintNames,
+          new AssignedValue(var, val)
         );
 				solution = solver.solve(csp);
 				if(!solution.isEmpty())
 					set.add(solution);
-			// }
-		// }
+			}
+		}
 		return set;
 	}
 }
