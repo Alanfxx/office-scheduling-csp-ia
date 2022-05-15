@@ -63,7 +63,7 @@ public class FlexibleBacktrackingSolver<VAR extends Variable, VAL> extends Abstr
     public Optional<Assignment<VAR, VAL>> solve(CSP<VAR, VAL> csp) {
         if (inferenceStrategy != null) {
             csp = csp.copyDomains(); // do not change the original CSP!
-            InferenceLog log = inferenceStrategy.apply(csp);
+            InferenceLog<VAR, VAL> log = inferenceStrategy.apply(csp);
             if (!log.isEmpty()) {
                 fireStateChanged(csp, null, null);
                 if (log.inconsistencyFound())

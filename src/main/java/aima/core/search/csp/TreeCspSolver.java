@@ -36,7 +36,7 @@ import java.util.*;
  * @author Ruediger Lunde
  * @author Anurag Rai
  */
-public class TreeCspSolver<VAR extends Variable, VAL> extends CspSolver<VAR, List<String>> {
+public class TreeCspSolver<VAR extends Variable, VAL> extends CspSolver<VAR, VAL> {
 
     private boolean useRandom;
 
@@ -46,14 +46,14 @@ public class TreeCspSolver<VAR extends Variable, VAL> extends CspSolver<VAR, Lis
     }
 
     @Override
-    public Optional<Assignment<VAR, List<String>>> solve(CSP<VAR, List<String>> csp) {
+    public Optional<Assignment<VAR, VAL>> solve(CSP<VAR, VAL> csp) {
 
-        Assignment<VAR, List<String>> assignment = new Assignment<>();
+        Assignment<VAR, VAL> assignment = new Assignment<>();
         // Select a root from the List of Variables
         VAR root = useRandom ? Util.selectRandomlyFromList(csp.getVariables()) : csp.getVariables().get(0);
         // Sort the variables in topological order
         List<VAR> orderedVars = new ArrayList<>();
-        Map<VAR, Constraint<VAR, List<String>>> parentConstraints = new HashMap<>();
+        Map<VAR, Constraint<VAR, VAL>> parentConstraints = new HashMap<>();
         topologicalSort(csp, root, orderedVars, parentConstraints);
         if (csp.getDomain(root).isEmpty())
             return Optional.empty(); // CSP has no solution! (needed if orderedVars.size() == 1)
@@ -62,7 +62,7 @@ public class TreeCspSolver<VAR extends Variable, VAL> extends CspSolver<VAR, Lis
         csp = csp.copyDomains(); // do not change the original CSP!
         for (int i = orderedVars.size() - 1; i > 0; i--) {
             VAR var = orderedVars.get(i);
-            Constraint<VAR, List<String>> constraint = parentConstraints.get(var);
+            Constraint<VAR, VAL> constraint = parentConstraints.get(var);
             VAR parent = csp.getNeighbor(var, constraint);
             if (makeArcConsistent(parent, var, constraint, csp)) {
                 fireStateChanged(csp, null, parent);
@@ -73,7 +73,7 @@ public class TreeCspSolver<VAR extends Variable, VAL> extends CspSolver<VAR, Lis
 
         // Assign values to variables from top to bottom.
         for (VAR var : orderedVars) {
-            for (List<String> value : csp.getDomain(var)) {
+            for (VAL value : csp.getDomain(var)) {
                 assignment.add(var, value);
                 if (assignment.isConsistent(csp.getConstraints(var))) {
                     fireStateChanged(csp, assignment, var);
@@ -95,8 +95,8 @@ public class TreeCspSolver<VAR extends Variable, VAL> extends CspSolver<VAR, Lis
      * @param parentConstraints The tree structure, maps a variable to the constraint representing the arc to the parent
      *                          variable (initially empty)
      */
-    private void topologicalSort(CSP<VAR, List<String>> csp, VAR root, List<VAR> orderedVars,
-                                 Map<VAR, Constraint<VAR, List<String>>> parentConstraints) {
+    private void topologicalSort(CSP<VAR, VAL> csp, VAR root, List<VAR> orderedVars,
+                                 Map<VAR, Constraint<VAR, VAL>> parentConstraints) {
         orderedVars.add(root);
         parentConstraints.put(root, null);
         int currParentIdx = -1;
@@ -104,7 +104,7 @@ public class TreeCspSolver<VAR extends Variable, VAL> extends CspSolver<VAR, Lis
             currParentIdx++;
             VAR currParent = orderedVars.get(currParentIdx);
             int arcsPointingUpwards = 0;
-            for (Constraint<VAR, List<String>> constraint : csp.getConstraints(currParent)) {
+            for (Constraint<VAR, VAL> constraint : csp.getConstraints(currParent)) {
                 VAR neighbor = csp.getNeighbor(currParent, constraint);
                 if (neighbor == null)
                     throw new IllegalArgumentException("Constraint " + constraint + " is not binary.");
@@ -126,13 +126,13 @@ public class TreeCspSolver<VAR extends Variable, VAL> extends CspSolver<VAR, Lis
      * Establishes arc-consistency for (xi, xj).
      * @return value true if the domain of xi was reduced.
      */
-    private boolean makeArcConsistent(VAR xi, VAR xj, Constraint<VAR, List<String>> constraint, CSP<VAR, List<String>> csp) {
-        Domain<List<String>> currDomain = csp.getDomain(xi);
-        List<List<String>> newValues = new ArrayList<>(currDomain.size());
-        Assignment<VAR, List<String>> assignment = new Assignment<>();
-        for (List<String> vi : currDomain) {
+    private boolean makeArcConsistent(VAR xi, VAR xj, Constraint<VAR, VAL> constraint, CSP<VAR, VAL> csp) {
+        Domain<VAL> currDomain = csp.getDomain(xi);
+        List<VAL> newValues = new ArrayList<>(currDomain.size());
+        Assignment<VAR, VAL> assignment = new Assignment<>();
+        for (VAL vi : currDomain) {
             assignment.add(xi, vi);
-            for (List<String> vj : csp.getDomain(xj)) {
+            for (VAL vj : csp.getDomain(xj)) {
                 assignment.add(xj, vj);
                 if (constraint.isSatisfiedWith(assignment)) {
                     newValues.add(vi);

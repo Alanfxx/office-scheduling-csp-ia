@@ -78,7 +78,6 @@ public class BidirectionalSearch<S, A> extends QueueSearch<S, A> {
 	 *         containing a single NoOp Action if already at the goal, or an
 	 *         empty list if the goal could not be found.
 	 */
-	@SuppressWarnings("unchecked")
 	public Optional<Node<S, A>> findNode(Problem<S, A> problem, Queue<Node<S, A>> frontier) {
 		assert (problem instanceof BidirectionalProblem);
 
@@ -103,7 +102,7 @@ public class BidirectionalSearch<S, A> extends QueueSearch<S, A> {
 
 		while (!isFrontierEmpty() && !Tasks.currIsCancelled()) {
 			// choose a leaf node and remove it from the frontier
-			ExtendedNode<S, A> node = (ExtendedNode) removeFromFrontier();
+			ExtendedNode<S, A> node = (ExtendedNode<S, A>) removeFromFrontier();
 			ExtendedNode<S, A> nodeFromOtherProblem;
 
 			// if the node contains a goal state then return the corresponding solution
@@ -230,15 +229,13 @@ public class BidirectionalSearch<S, A> extends QueueSearch<S, A> {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	private boolean isExplored(Node<S, A> node) {
-		ExtendedNode<S, A> eNode =  (ExtendedNode) node;
+		ExtendedNode<S, A> eNode =  (ExtendedNode<S, A>) node;
 		return explored.get(eNode.getProblemIndex()).containsKey(eNode.getState());
 	}
 
-	@SuppressWarnings("unchecked")
 	private void setExplored(Node<S, A> node) {
-		ExtendedNode<S, A> eNode = (ExtendedNode) node;
+		ExtendedNode<S, A> eNode = (ExtendedNode<S, A>) node;
 		explored.get(eNode.getProblemIndex()).put(eNode.getState(), eNode);
 	}
 

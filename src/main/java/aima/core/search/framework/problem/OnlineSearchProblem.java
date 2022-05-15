@@ -1,7 +1,5 @@
 package aima.core.search.framework.problem;
 
-import aima.core.search.framework.Node;
-
 import java.util.List;
 
 /**
