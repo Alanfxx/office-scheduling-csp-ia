@@ -6,18 +6,18 @@ import java.util.List;
 import aima.core.search.csp.Assignment;
 import aima.core.search.csp.Constraint;
 import aima.core.search.csp.Variable;
-import projetocsp.entities.PersonSchedule;
+import projetocsp.entities.Person;
 
 /**
  * Representa a restriçao unária que fixa um funcionário num bloco de tempo
  */
-public class AssignedValue<VAR extends Variable, VAL> implements Constraint<VAR, PersonSchedule> {
+public class AssignedValue<VAR extends Variable, VAL> implements Constraint<VAR, Person> {
 
 	private VAR var;
-	private PersonSchedule val;
+	private Person val;
 	private List<VAR> scope;
 
-	public AssignedValue(VAR var, PersonSchedule val) {
+	public AssignedValue(VAR var, Person val) {
 		this.var = var;
 		this.val = val;
 		scope = new ArrayList<>(1);
@@ -30,8 +30,8 @@ public class AssignedValue<VAR extends Variable, VAL> implements Constraint<VAR,
 	}
 
 	@Override
-	public boolean isSatisfiedWith(Assignment<VAR, PersonSchedule> assignment) {
-		PersonSchedule value = assignment.getValue(var);
+	public boolean isSatisfiedWith(Assignment<VAR, Person> assignment) {
+		Person value = assignment.getValue(var);
 		return value.equals(val);
 	}
 }

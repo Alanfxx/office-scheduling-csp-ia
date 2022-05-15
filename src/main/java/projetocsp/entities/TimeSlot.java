@@ -1,12 +1,15 @@
 package projetocsp.entities;
 
-public class TimeSlot implements Cloneable {
+import aima.core.search.csp.Variable;
+
+public class TimeSlot extends Variable {
+
   private Integer hour;
   private Person person;
 
   public TimeSlot(Integer hour) {
+    super(hour.toString());
     this.hour = hour;
-    this.person = null;
   }
 
   public Integer getHour() {
@@ -33,29 +36,4 @@ public class TimeSlot implements Cloneable {
 		}
 		return result;
 	}
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((hour == null) ? 0 : hour.hashCode());
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    TimeSlot other = (TimeSlot) obj;
-    if (hour == null) {
-      if (other.hour != null)
-        return false;
-    } else if (!hour.equals(other.hour))
-      return false;
-    return true;
-  }
 }

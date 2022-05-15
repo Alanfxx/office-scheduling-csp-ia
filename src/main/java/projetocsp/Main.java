@@ -10,7 +10,6 @@ import aima.core.search.csp.Assignment;
 import aima.core.search.csp.CspListener;
 import projetocsp.csp.AlgorithmCtrl;
 import projetocsp.entities.Person;
-import projetocsp.entities.PersonSchedule;
 import projetocsp.entities.Schedule;
 import projetocsp.entities.TimeSlot;
 import projetocsp.utils.ManageResults;
@@ -23,22 +22,25 @@ public class Main {
     // =====[ Criando um caso ]=======================
 
     Person alice = new Person("Alice", 2);
-    Person bob = new Person("Bob", 2);
+    Person bob = new Person("Bob", 4);
     Person charlie = new Person("Charlie", 2);
     Person david = new Person("David", 2);
     Person eve = new Person("Eve", 2);
-    
+
+    //Valor necessario para atribuir em horarios sem funcionarios
+    Person empty = new Person("Empty", 24);
+
     List<Person> members = new ArrayList<>(
-      Arrays.asList(alice, bob, charlie, david, eve)
-      );
-      
+      Arrays.asList(alice, bob, charlie, david, eve, empty)
+    );
+
     List<TimeSlot> timeSlots = new ArrayList<>();
     for (int i = 1; i <= 24; i++) {
       timeSlots.add(new TimeSlot(i));
     }
-    
+
     List<String> constraintNames = new ArrayList<>();
-    constraintNames.add("MaxMembersAtATime");
+    constraintNames.add("MaxWorkingHours");
 
 
     // =====[ Escolhendo o algoritmo ]================
@@ -51,12 +53,12 @@ public class Main {
 
 		// =====[ Execucao principal ]====================
 
-    CspListener.StepCounter<Person, PersonSchedule> stepCounter = new CspListener.StepCounter<>();
+    CspListener.StepCounter<TimeSlot, Person> stepCounter = new CspListener.StepCounter<>();
     AlgorithmCtrl algorithmCtrl = new AlgorithmCtrl(members, timeSlots, constraintNames);
     
-    System.out.println("Alocar funcionários ("+algorithm+")");
+    System.out.println("\nAlocar funcionários ("+algorithm+")");
     Timer timer = new Timer();
-    Set<Optional<Assignment<Person, PersonSchedule>>> solutions = algorithmCtrl.useAlgorithm(algorithm, stepCounter);
+    Set<Optional<Assignment<TimeSlot, Person>>> solutions = algorithmCtrl.useAlgorithm(algorithm, stepCounter);
     String tempo = timer.toString();
     long numResultados = solutions.size();
 
@@ -65,7 +67,14 @@ public class Main {
 
     System.out.println("Tempo decorrido = "+ tempo);
     System.out.println("Solucoes obtidas = "+ numResultados);
-    System.out.println(stepCounter.getResults() + "\n");
+
+    if (stepCounter.getResults().get("assignmentCount") != null)
+      System.out.println("Atribuicoes = "+stepCounter.getResults().get("assignmentCount"));
+  
+    if (stepCounter.getResults().get("inferenceCount") != null)
+      System.out.println("Inferencias = "+stepCounter.getResults().get("inferenceCount"));
+
+    System.out.println();
 
     ManageResults mr = new ManageResults(solutions, timeSlots, members);
     List<Schedule> schedules = mr.getSchedules();

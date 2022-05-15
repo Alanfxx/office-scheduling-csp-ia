@@ -16,10 +16,6 @@ public class Schedule {
 	}
 	
 	public List<TimeSlot> getTimeSlots() {
-		/*
-		 * Os blocos de horario que não tiver com funcionario alocado
-		 * estará como "null" no campo "person"
-		 */
 		return timeSlots; 
 	}
 }

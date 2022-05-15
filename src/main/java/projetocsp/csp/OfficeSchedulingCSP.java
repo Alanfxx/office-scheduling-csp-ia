@@ -5,22 +5,22 @@ import java.util.List;
 import aima.core.search.csp.CSP;
 import aima.core.search.csp.Constraint;
 import aima.core.search.csp.Domain;
-import projetocsp.constraints.MaxMembersAtATime;
+import projetocsp.constraints.MaxWorkingHours;
 import projetocsp.entities.Person;
-import projetocsp.entities.PersonSchedule;
+import projetocsp.entities.TimeSlot;
 
-public class OfficeSchedulingCSP extends CSP<Person, PersonSchedule> {
+public class OfficeSchedulingCSP extends CSP<TimeSlot, Person> {
 
 	public OfficeSchedulingCSP(
     List<Person> members,
-    Domain<PersonSchedule> domain,
+    List<TimeSlot> timeSlots,
     List<String> contraintNames
-    // Constraint<Person, PersonSchedule> dynamicConstraint
+    // Constraint<TimeSlot, Person> dynamicConstraint
   ) {
-    super(members);
+    super(timeSlots);
 
-    for (Person var : getVariables()) {
-      setDomain(var, domain);
+    for (TimeSlot var : getVariables()) {
+      setDomain(var, new Domain<>(members));
     }
 
     addConstraints(contraintNames);
@@ -33,17 +33,20 @@ public class OfficeSchedulingCSP extends CSP<Person, PersonSchedule> {
 	}
 
   private void addConstraints(List<String> contraintNames) {
-    if(contraintNames.contains("MaxMembersAtATime")) {
-      addMaxMembersAtATime(getVariables(), 0);
+    if (contraintNames.contains("MaxWorkingHours")) {
+      for (TimeSlot tl : getVariables()) {
+        addConstraint(new MaxWorkingHours<>(tl));
+      }
     }
     // if(contraintNames.contains("xxxxxx")) {
     // }
   }
 
-  private void addMaxMembersAtATime(List<Person> vars, int j) {
-		for(int i = j+1; i < getVariables().size(); i++){
-			addConstraint(new MaxMembersAtATime<>(vars.get(j), vars.get(i)));
-		}
-		if(j+1 < vars.size()) addMaxMembersAtATime(vars, j+1);
-	}
+  // private void addMaxMembersAtATime(int j) {
+  //   List<TimeSlot> vars = getVariables();
+	// 	for (int i = j+1; i < vars.size(); i++) {
+	// 		addConstraint(new MaxMembersAtATime<>(vars.get(j), vars.get(i)));
+	// 	}
+	// 	if (j+1 < vars.size()) addMaxMembersAtATime(j+1);
+	// }
 }
