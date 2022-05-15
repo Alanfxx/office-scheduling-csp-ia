@@ -9,8 +9,8 @@ import aima.core.search.csp.Variable;
 import projetocsp.entities.Person;
 
 /**
- * Representa uma restrição unária que proíbe um funcionário de estar
- * no escritório por mais horas do que sua carga horária.
+ * Representa uma restrição unária que fixa a quantidade de horas que um
+ * funcionário deve estar no escritorio de acordo com sua carga horaria
  */
 public class MaxWorkingHours<VAR extends Variable, VAL> implements Constraint<VAR, Person> {
 
@@ -38,6 +38,6 @@ public class MaxWorkingHours<VAR extends Variable, VAL> implements Constraint<VA
       if (value.equals(p)) count++;
     }
 
-		return value.getWorkingHours() >= count;
+		return value.getWorkingHours() == count;
   }
 }
