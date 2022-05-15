@@ -30,7 +30,7 @@ public class PreferredSchedule implements Constraint<TimeSlot, Person> {
 
   @Override
   public boolean isSatisfiedWith(Assignment<TimeSlot, Person> assignment) {
-    Person value = assignment.getValue(var);
-    return value.free(var);
+    Person person = assignment.getValue(var);
+    return person.free(var);
   }
 }

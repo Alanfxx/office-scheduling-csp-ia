@@ -14,12 +14,12 @@ import projetocsp.entities.TimeSlot;
 public class AssignedValue implements Constraint<TimeSlot, Person> {
 
 	private TimeSlot var;
-	private Person val;
+	private Person person;
 	private List<TimeSlot> scope;
 
-	public AssignedValue(TimeSlot var, Person val) {
+	public AssignedValue(TimeSlot var, Person person) {
 		this.var = var;
-		this.val = val;
+		this.person = person;
 		scope = new ArrayList<>(1);
 		scope.add(var);
 	}
@@ -31,7 +31,7 @@ public class AssignedValue implements Constraint<TimeSlot, Person> {
 
 	@Override
 	public boolean isSatisfiedWith(Assignment<TimeSlot, Person> assignment) {
-		Person value = assignment.getValue(var);
-		return value.equals(val);
+		Person person = assignment.getValue(var);
+		return person.equals(this.person);
 	}
 }

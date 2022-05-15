@@ -14,11 +14,11 @@ import projetocsp.entities.TimeSlot;
  */
 public class AssignAllPeople implements Constraint<TimeSlot, Person> {
 
-  private List<Person> values;
+  private List<Person> members;
 	private List<TimeSlot> scope;
 
-	public AssignAllPeople(TimeSlot var, List<Person> values) {
-		this.values = values;
+	public AssignAllPeople(TimeSlot var, List<Person> members) {
+		this.members = members;
 		scope = new ArrayList<>(1);
 		scope.add(var);
 	}
@@ -32,7 +32,7 @@ public class AssignAllPeople implements Constraint<TimeSlot, Person> {
   public boolean isSatisfiedWith(Assignment<TimeSlot, Person> assignment) {
     Collection<Person> assignedValues = assignment.getVariableToValueMap().values();
 
-    for (Person p : values) {
+    for (Person p : members) {
       if (p.getName() != "Empty" && !assignedValues.contains(p))
         return false;
     }

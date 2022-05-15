@@ -30,14 +30,16 @@ public class MaxWorkingHours implements Constraint<TimeSlot, Person> {
 
   @Override
   public boolean isSatisfiedWith(Assignment<TimeSlot, Person> assignment) {
-    Person value = assignment.getValue(var);
-		if (value == null) return true;
-    if (value.getName() == "Empty") return true;
-    int count = 0;
+    Person person = assignment.getValue(var);
+
+		if (person == null) return true;
+    if (person.getName() == "Empty") return true;
+
+    int occurrences = 0;
     for (Person p : assignment.getVariableToValueMap().values()) {
-      if (value.equals(p)) count++;
+      if (person.equals(p)) occurrences++;
     }
 
-		return value.getWorkingHours() == count;
+		return person.getWorkingHours() == occurrences;
   }
 }
