@@ -141,11 +141,6 @@ public class Main {
     ManageResults mr = new ManageResults(solutions, timeSlots, members);
     List<Schedule> schedules = mr.getSchedules();
     
-    if (schedules.size() == 0) {
-      read.close();
-      return;
-    }
-    
     input = "";
     int currentSolution = 1;
     
@@ -162,15 +157,20 @@ public class Main {
       if (stepCounter.getResults().get("inferenceCount") != null)
         System.out.println("Inferencias = "+stepCounter.getResults().get("inferenceCount"));
   
-      System.out.println();
-      if (schedules.size() == currentSolution - 1) currentSolution = 1;
-
-      System.out.println("Exibindo solucao: " + currentSolution);
-      System.out.println();
-      System.out.println(mr.getResult(schedules.get(currentSolution - 1)));
-      currentSolution++;
-      System.out.print("[Enter] Proxima solucao | [S] Sair\n>>");
-      input = read.nextLine();
+      if (schedules.size() == 0) {
+        read.close();
+        return;
+      } else {
+        System.out.println();
+        if (schedules.size() == currentSolution - 1) currentSolution = 1;
+  
+        System.out.println("Exibindo solucao: " + currentSolution);
+        System.out.println();
+        System.out.println(mr.getResult(schedules.get(currentSolution - 1)));
+        currentSolution++;
+        System.out.print("[Enter] Proxima solucao | [S] Sair\n>>");
+        input = read.nextLine();
+      }
     } while(!input.toLowerCase().equals("s"));
 
     read.close();
