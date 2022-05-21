@@ -63,18 +63,66 @@ public class Main {
       )
     ));
 
+
+    // =====[ Escolhendo as restrições ]==============
+
+    Scanner read = new Scanner(System.in);
+    String input = "";
+    System.out.println("Selecione as restricoes:\n");
+    System.out.println("[1] MaxWorkingHours\n[2] PreferredSchedule\n[3] AssignAllPeople");
+    System.out.println("[4] Todas as restricoes\n");
+    System.out.print("Exemplo >>1,2\n\n>>");
+    input = read.nextLine();
+
+    List<String> options = new ArrayList<String>(
+      Arrays.asList(input.trim().split(","))
+    );
+
     List<String> constraintNames = new ArrayList<>();
-    constraintNames.add("MaxWorkingHours");
-    constraintNames.add("PreferredSchedule");
-    constraintNames.add("AssignAllPeople");
+    if (options.contains("4")) {
+      constraintNames.add("MaxWorkingHours");
+      constraintNames.add("PreferredSchedule");
+      constraintNames.add("AssignAllPeople");
+    } else {
+      for (String option : options) {
+        switch(option) {
+          case "1":
+            constraintNames.add("MaxWorkingHours");
+            break;
+          case "2":
+            constraintNames.add("PreferredSchedule");
+            break;
+          case "3":
+            constraintNames.add("AssignAllPeople");
+        }
+      }
+    }
 
 
     // =====[ Escolhendo o algoritmo ]================
 
-    String algorithm = "MinConflictsSolver";
-    // String algorithm = "Backtracking + MRV & DEG + LCV + AC3";
-    // String algorithm = "Backtracking + MRV & DEG";
-    // String algorithm = "Backtracking";
+    input = "";
+    System.out.println("Selecione um algoritmo:\n");
+    System.out.println("[1] MinConflictsSolver");
+    System.out.println("[2] Backtracking + MRV & DEG + LCV + AC3");
+    System.out.println("[3] Backtracking + MRV & DEG");
+    System.out.print("[4] Backtracking\n\n>>");
+
+    String alg = read.nextLine();
+    String algorithm = "";
+    switch(alg.trim().charAt(0)) {
+      case '1':
+        algorithm = "MinConflictsSolver";
+        break;
+      case '2':
+        algorithm = "Backtracking + MRV & DEG + LCV + AC3";
+        break;
+      case '3':
+        algorithm = "Backtracking + MRV & DEG";
+        break;
+      case '4':
+        algorithm = "Backtracking";
+    }
 
 
 		// =====[ Execucao principal ]====================
@@ -82,28 +130,31 @@ public class Main {
     CspListener.StepCounter<TimeSlot, Person> stepCounter = new CspListener.StepCounter<>();
     AlgorithmCtrl algorithmCtrl = new AlgorithmCtrl(members, timeSlots, constraintNames);
     
-    System.out.println("\nAlocar funcionários ("+algorithm+")");
     Timer timer = new Timer();
     Set<Optional<Assignment<TimeSlot, Person>>> solutions = algorithmCtrl.useAlgorithm(algorithm, stepCounter);
     String tempo = timer.toString();
     long numResultados = solutions.size();
-
-
+    
+    
     // =====[ Exibindo os resultados ]================
-
+    
     ManageResults mr = new ManageResults(solutions, timeSlots, members);
     List<Schedule> schedules = mr.getSchedules();
-
-    if (schedules.size() == 0) return;
-
-    Scanner read = new Scanner(System.in);
-    String input = "";
+    
+    if (schedules.size() == 0) {
+      read.close();
+      return;
+    }
+    
+    input = "";
     int currentSolution = 1;
     
     do {
       try {clear();} catch (Exception e) {}
-      System.out.println("Tempo decorrido = "+ tempo);
-      System.out.println("Solucoes obtidas = "+ numResultados);
+      System.out.println("Restricoes selecionadas = " + constraintNames);
+      System.out.println("Algoritmo selecionado = " + algorithm);
+      System.out.println("Tempo decorrido = " + tempo);
+      System.out.println("Solucoes obtidas = " + numResultados);
   
       if (stepCounter.getResults().get("assignmentCount") != null)
         System.out.println("Atribuicoes = "+stepCounter.getResults().get("assignmentCount"));
