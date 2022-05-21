@@ -25,7 +25,7 @@ public class NodeFactory<S, A> {
 	 * using local search to search for states, parent links are not needed and
 	 * lead to unnecessary memory consumption.
 	 */
-	public NodeFactory useParentLinks(boolean s) {
+	public NodeFactory<S, A> useParentLinks(boolean s) {
 		useParentLinks = s;
 		return this;
 	}

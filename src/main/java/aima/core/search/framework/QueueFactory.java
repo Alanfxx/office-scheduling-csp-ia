@@ -40,7 +40,7 @@ public class QueueFactory {
 		return new FifoQueueWithHashSet<E>();
 	}
 
-	private static class FifoQueueWithHashSet<E> extends LinkedList<E> implements Queue<E> {
+	private static class FifoQueueWithHashSet<E> extends LinkedList<E> {
 		private HashSet<E> elements = new HashSet<>();
 
 		@Override
