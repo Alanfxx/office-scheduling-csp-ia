@@ -1,9 +1,11 @@
 package projetocsp;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.Set;
 
 import aima.core.search.csp.Assignment;
@@ -21,7 +23,11 @@ public class Main {
 
     // =====[ Criando um caso ]=======================
 
-    Person alice = new Person("Alice", 2);
+    /*
+     * [IMPORTANTE]
+     * A soma de todos as workingHours nao pode ultrapassar 24 horas
+     */
+    Person alice = new Person("Alice", 4);
     Person bob = new Person("Bob", 3);
     Person charlie = new Person("Charlie", 2);
     Person david = new Person("David", 2);
@@ -85,22 +91,45 @@ public class Main {
 
     // =====[ Exibindo os resultados ]================
 
-    System.out.println("Tempo decorrido = "+ tempo);
-    System.out.println("Solucoes obtidas = "+ numResultados);
-
-    if (stepCounter.getResults().get("assignmentCount") != null)
-      System.out.println("Atribuicoes = "+stepCounter.getResults().get("assignmentCount"));
-  
-    if (stepCounter.getResults().get("inferenceCount") != null)
-      System.out.println("Inferencias = "+stepCounter.getResults().get("inferenceCount"));
-
-    System.out.println();
-
     ManageResults mr = new ManageResults(solutions, timeSlots, members);
     List<Schedule> schedules = mr.getSchedules();
 
-    if (numResultados > 0) {
-      System.out.println(mr.getResult(schedules.get(0)));
-    }
+    if (schedules.size() == 0) return;
+
+    Scanner read = new Scanner(System.in);
+    String input = "";
+    int currentSolution = 1;
+    
+    do {
+      try {clear();} catch (Exception e) {}
+      System.out.println("Tempo decorrido = "+ tempo);
+      System.out.println("Solucoes obtidas = "+ numResultados);
+  
+      if (stepCounter.getResults().get("assignmentCount") != null)
+        System.out.println("Atribuicoes = "+stepCounter.getResults().get("assignmentCount"));
+    
+      if (stepCounter.getResults().get("inferenceCount") != null)
+        System.out.println("Inferencias = "+stepCounter.getResults().get("inferenceCount"));
+  
+      System.out.println();
+      if (schedules.size() == currentSolution - 1) currentSolution = 1;
+
+      System.out.println("Exibindo solucao: " + currentSolution);
+      System.out.println();
+      System.out.println(mr.getResult(schedules.get(currentSolution - 1)));
+      currentSolution++;
+      System.out.print("[Enter] Proxima solucao | [S] Sair\n>>");
+      input = read.nextLine();
+    } while(!input.toLowerCase().equals("s"));
+
+    read.close();
 	}
+
+  private static void clear() throws IOException, InterruptedException{
+    //Limpa a tela no windows, no linux e no MacOS
+    if (System.getProperty("os.name").contains("Windows"))
+      new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+    else
+      Runtime.getRuntime().exec("clear");
+  }
 }
