@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Scanner;
 
 import aima.core.search.csp.Assignment;
 import aima.core.search.csp.CspListener;
@@ -18,89 +19,115 @@ import projetocsp.utils.Timer;
 public class Main {
 	
 	public static void main(String[] args) {
+	    // =====[ Restrigindo horarios ]=======================
+//		Scanner sc = new Scanner(System.in);
+//	    System.out.printf("Informe horario de inicio:\n");
+//	    int open = sc.nextInt();
+//	    System.out.printf("Informe horario de fechamento:\n");
+//	    int close = sc.nextInt();
+	    
+	    // =====[ Criando um caso ]=======================
+	
+	    Person alice = new Person("Alice", 2);
+	    Person bob = new Person("Bob", 3);
+	    Person charlie = new Person("Charlie", 2);
+	    Person david = new Person("David", 2);
+	    Person eve = new Person("Eve", 4);
+	
+	   // Valor necessario para atribuir em horarios sem funcionarios
+	    Person empty = new Person("Empty", 24);
+	    
+//	    Person empty = new Person("Empty", close);
+	    
+	    List<Person> members = new ArrayList<>(
+	      Arrays.asList(alice, bob, charlie, david, eve, empty)
+	    );
+	    
+	    List<TimeSlot> timeSlots = new ArrayList<>();
+	    for (int i = 1; i <= 24; i++) {
+	      timeSlots.add(new TimeSlot(i));
+	    }
+	
+	    // =====[ Setting preferences ]================
+	    
+	    int[] alicePreferences = { 5, 6, 8, 10, 11, 13, 17, 18, 19, 20 };
+	    List<TimeSlot> aliceTimeslots = new ArrayList<>();
+	    for (int i : alicePreferences) {
+	      aliceTimeslots.add(timeSlots.get(i));
+	    }
+	    alice.setPreferences(aliceTimeslots);
 
-    // =====[ Criando um caso ]=======================
+	    int[] bobPreferences = { 1, 3, 4, 6, 8, 9, 10, 13, 16, 17, 22 };
+	    List<TimeSlot> bobTimeslots = new ArrayList<>();
+	    for (int i : bobPreferences) {
+	      bobTimeslots.add(timeSlots.get(i));
+	    }
+	    bob.setPreferences(bobTimeslots);
 
-    Person alice = new Person("Alice", 2);
-    Person bob = new Person("Bob", 3);
-    Person charlie = new Person("Charlie", 2);
-    Person david = new Person("David", 2);
-    Person eve = new Person("Eve", 4);
+	    int[] charliePreferences = { 2, 5, 9, 11, 12, 14, 20, 21, 22, 23 };
+	    List<TimeSlot> charlieTimeslots = new ArrayList<>();
+	    for (int i : charliePreferences) {
+	      charlieTimeslots.add(timeSlots.get(i));
+	    }
+	    charlie.setPreferences(charlieTimeslots);
+   
+	    int[] davidPreferences = { 1, 3, 4, 7, 13, 14, 15, 16, 19, 21, 23 };
+	    List<TimeSlot> davidTimeslots = new ArrayList<>();
+	    for (int i : davidPreferences) {
+	      davidTimeslots.add(timeSlots.get(i));
+	    }
+	    david.setPreferences(davidTimeslots);
+	
+		int[] evePreferences = { 1, 2, 3, 4, 8, 9, 11, 13, 13, 14, 18, 22 };
+	    List<TimeSlot> eveTimeslots = new ArrayList<>();
+	    for (int i : evePreferences) {
+	      eveTimeslots.add(timeSlots.get(i));
+	    }
+	    eve.setPreferences(eveTimeslots);
 
-    //Valor necessario para atribuir em horarios sem funcionarios
-    Person empty = new Person("Empty", 24);
+		// =====[ Contraints ]================
+	    
+	    List<String> constraintNames = new ArrayList<>();
+	    constraintNames.add("MaxWorkingHours");
+	    constraintNames.add("PreferredSchedule");
+	    constraintNames.add("AssignAllPeople");
+	
+	    // =====[ Escolhendo o algoritmo ]================
+	
+	    String algorithm = "MinConflictsSolver";
+//	     String algorithm = "Backtracking + MRV & DEG + LCV + AC3";
+//	     String algorithm = "Backtracking + MRV & DEG";
+//	     String algorithm = "Backtracking";
 
-    List<Person> members = new ArrayList<>(
-      Arrays.asList(alice, bob, charlie, david, eve, empty)
-    );
+	    // =====[ Execucao principal ]====================
+	
+	    CspListener.StepCounter<TimeSlot, Person> stepCounter = new CspListener.StepCounter<>();
+	    AlgorithmCtrl algorithmCtrl = new AlgorithmCtrl(members, timeSlots, constraintNames);
+	    
+	    System.out.println("\nAlocar funcionários ("+algorithm+")");
+	    Timer timer = new Timer();
+	    Set<Optional<Assignment<TimeSlot, Person>>> solutions = algorithmCtrl.useAlgorithm(algorithm, stepCounter);
+	    String tempo = timer.toString();
+	    long numResultados = solutions.size();
 
-    List<TimeSlot> timeSlots = new ArrayList<>();
-    for (int i = 1; i <= 24; i++) {
-      timeSlots.add(new TimeSlot(i));
-    }
-
-    bob.setPreferences(new ArrayList<>(
-      Arrays.asList(
-        timeSlots.get(0),
-        timeSlots.get(1),
-        timeSlots.get(2),
-        timeSlots.get(3),
-        timeSlots.get(4),
-        timeSlots.get(5),
-        timeSlots.get(6),
-        timeSlots.get(7),
-        timeSlots.get(8),
-        timeSlots.get(9),
-        timeSlots.get(10),
-        timeSlots.get(11),
-        timeSlots.get(12)
-      )
-    ));
-
-    List<String> constraintNames = new ArrayList<>();
-    constraintNames.add("MaxWorkingHours");
-    constraintNames.add("PreferredSchedule");
-    constraintNames.add("AssignAllPeople");
-
-
-    // =====[ Escolhendo o algoritmo ]================
-
-    String algorithm = "MinConflictsSolver";
-    // String algorithm = "Backtracking + MRV & DEG + LCV + AC3";
-    // String algorithm = "Backtracking + MRV & DEG";
-    // String algorithm = "Backtracking";
-
-
-		// =====[ Execucao principal ]====================
-
-    CspListener.StepCounter<TimeSlot, Person> stepCounter = new CspListener.StepCounter<>();
-    AlgorithmCtrl algorithmCtrl = new AlgorithmCtrl(members, timeSlots, constraintNames);
-    
-    System.out.println("\nAlocar funcionários ("+algorithm+")");
-    Timer timer = new Timer();
-    Set<Optional<Assignment<TimeSlot, Person>>> solutions = algorithmCtrl.useAlgorithm(algorithm, stepCounter);
-    String tempo = timer.toString();
-    long numResultados = solutions.size();
-
-
-    // =====[ Exibindo os resultados ]================
-
-    System.out.println("Tempo decorrido = "+ tempo);
-    System.out.println("Solucoes obtidas = "+ numResultados);
-
-    if (stepCounter.getResults().get("assignmentCount") != null)
-      System.out.println("Atribuicoes = "+stepCounter.getResults().get("assignmentCount"));
-  
-    if (stepCounter.getResults().get("inferenceCount") != null)
-      System.out.println("Inferencias = "+stepCounter.getResults().get("inferenceCount"));
-
-    System.out.println();
-
-    ManageResults mr = new ManageResults(solutions, timeSlots, members);
-    List<Schedule> schedules = mr.getSchedules();
-
-    if (numResultados > 0) {
-      System.out.println(mr.getResult(schedules.get(0)));
-    }
+	    // =====[ Exibindo os resultados ]================
+	
+	    System.out.println("Tempo decorrido = "+ tempo);
+	    System.out.println("Solucoes obtidas = "+ numResultados);
+	
+	    if (stepCounter.getResults().get("assignmentCount") != null)
+	      System.out.println("Atribuicoes = "+stepCounter.getResults().get("assignmentCount"));
+	  
+	    if (stepCounter.getResults().get("inferenceCount") != null)
+	      System.out.println("Inferencias = "+stepCounter.getResults().get("inferenceCount"));
+	
+	    System.out.println();
+	
+	    ManageResults mr = new ManageResults(solutions, timeSlots, members);
+	    List<Schedule> schedules = mr.getSchedules();
+	
+	    if (numResultados > 0) {
+	      System.out.println(mr.getResult(schedules.get(0)));
+	    }
 	}
 }
