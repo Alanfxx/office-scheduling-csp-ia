@@ -2,13 +2,17 @@ package projetocsp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Scanner;
 
 import aima.core.search.csp.Assignment;
+import aima.core.search.csp.CspHeuristics;
 import aima.core.search.csp.CspListener;
+import aima.core.search.csp.FlexibleBacktrackingSolver;
+import aima.core.search.csp.MinConflictsSolver;
 import projetocsp.csp.AlgorithmCtrl;
 import projetocsp.entities.Person;
 import projetocsp.entities.Schedule;
@@ -88,19 +92,65 @@ public class Main {
 		// =====[ Contraints ]================
 	    
 	    List<String> constraintNames = new ArrayList<>();
-	    constraintNames.add("MaxWorkingHours");
-	    constraintNames.add("PreferredSchedule");
-	    constraintNames.add("AssignAllPeople");
-	
-	    // =====[ Escolhendo o algoritmo ]================
-	
-	    String algorithm = "MinConflictsSolver";
-//	     String algorithm = "Backtracking + MRV & DEG + LCV + AC3";
-//	     String algorithm = "Backtracking + MRV & DEG";
-//	     String algorithm = "Backtracking";
 
-	    // =====[ Execucao principal ]====================
-	
+		Scanner sc = new Scanner(System.in);
+	    System.out.printf("Escolha as restrições:\n[1] MaxWorkingHours\n[2] MaxWorkingHours + AssignAllPeople\n[3] MaxWorkingHours + PreferredSchedule + AssignAllPeople\n");
+	    int contraints_choice = sc.nextInt();
+		// sc.close();
+	    
+		switch(contraints_choice) {
+			case 1:
+				constraintNames.add("MaxWorkingHours");
+				break;
+			case 2:
+			    constraintNames.add("MaxWorkingHours");
+			    constraintNames.add("AssignAllPeople");
+				break;
+			case 3:
+				constraintNames.add("MaxWorkingHours");
+				constraintNames.add("PreferredSchedule");
+				constraintNames.add("AssignAllPeople");
+				break;
+			default:
+				constraintNames.add("MaxWorkingHours");
+				break;
+		}
+		
+//	    constraintNames.add("MaxWorkingHours");
+//	    constraintNames.add("PreferredSchedule");
+//	    constraintNames.add("AssignAllPeople");
+
+// 		=====[ Escolhendo o algoritmo ]================
+//	    String algorithm = "MinConflictsSolver";
+//  	String algorithm = "Backtracking + MRV & DEG + LCV + AC3";
+//	    String algorithm = "Backtracking + MRV & DEG";
+//	    String algorithm = "Backtracking";
+
+		// Scanner sc_switch = new Scanner(System.in);
+	    System.out.printf("Escolha um algoritmo:\n[1] Min Conflicts\n[2] Backtracking + MRV & DEG + LCV + AC3\n[3] Backtracking + MRV & DEG\n[4] Backtracking\n");
+	    int algorithm_choice = sc.nextInt();
+		sc.close();
+
+	    String algorithm;
+	    
+		switch(algorithm_choice) {
+			case 1:
+				algorithm = "MinConflictsSolver";
+				break;
+			case 2:
+				algorithm = "Backtracking + MRV & DEG + LCV + AC3";
+				break;
+			case 3:
+				algorithm = "Backtracking + MRV & DEG";
+				break;
+			case 4:
+				algorithm = "Backtracking";
+				break;
+			default:
+				algorithm = "HashMap";
+		}
+
+	    // =====[ Execucao principal ]====================	
 	    CspListener.StepCounter<TimeSlot, Person> stepCounter = new CspListener.StepCounter<>();
 	    AlgorithmCtrl algorithmCtrl = new AlgorithmCtrl(members, timeSlots, constraintNames);
 	    
